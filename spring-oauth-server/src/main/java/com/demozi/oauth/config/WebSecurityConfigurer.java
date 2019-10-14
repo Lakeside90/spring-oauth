@@ -17,27 +17,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
+        //授权登陆账号
         auth.inMemoryAuthentication()
-//                .passwordEncoder(passwordEncoder)
                 .withUser("user").password(passwordEncoder.encode("123456")).roles("USER")
                 .and()
                 .withUser("admin").password(passwordEncoder.encode("123456")).roles("ADMIN");
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeRequests()
-                .antMatchers("/oauth/**").authenticated()
-                .and()
-                .httpBasic().realmName("OAuth Server");
-    }
 }
